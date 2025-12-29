@@ -18,10 +18,10 @@ def get_tokens():
     data = response.json()
     
     if 'refresh_token' in data:
-        print("\n✅ SUCCESS! Copy this into your .env file:")
+        print("\n SUCCESS! Copy this into your .env file:")
         print(f"STRAVA_REFRESH_TOKEN=\"{data['refresh_token']}\"")
     else:
-        print("\n❌ Error:", data)
+        print("\n Error:", data)
 
 if __name__ == "__main__":
     get_tokens()
