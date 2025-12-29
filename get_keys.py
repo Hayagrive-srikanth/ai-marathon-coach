@@ -1,6 +1,5 @@
 import requests
 
-# --- PASTE YOUR DETAILS HERE ---
 client_id = "187173"
 client_secret = "5acc0a72a6840084975a61b56e7d8603a234e352"  
 code = "ed83f179c7b53f7e9670359d8d92405f4babb020"  
