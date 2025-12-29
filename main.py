@@ -1,19 +1,17 @@
 import os
 import json
 import requests
-from datetime import datetime  # <--- NEW: Allows AI to know "Today"
+from datetime import datetime  
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# 1. Load Secrets
 load_dotenv()
 
 app = FastAPI()
 
-# 2. Allow Lovable to talk to this backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,7 +19,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- TOOL 1: WEATHER ---
 def get_weather(city: str):
     api_key = os.getenv("OPENWEATHER_API_KEY")
     if not api_key: return "Simulated: Sunny, 25°C"
@@ -33,7 +30,6 @@ def get_weather(city: str):
         return f"{data['weather'][0]['description']}, {data['main']['temp']}°C"
     return "Error fetching weather."
 
-# --- TOOL 2: STRAVA (Updated) ---
 def get_strava_stats():
     refresh_token = os.getenv("STRAVA_REFRESH_TOKEN")
     client_id = os.getenv("STRAVA_CLIENT_ID")
@@ -41,8 +37,7 @@ def get_strava_stats():
     
     if not refresh_token: return "Error: Strava keys missing."
 
-    # A. Refresh the Token
-    auth_res = requests.post("https://www.strava.com/oauth/token", data={
+        auth_res = requests.post("https://www.strava.com/oauth/token", data={
         'client_id': client_id,
         'client_secret': client_secret,
         'refresh_token': refresh_token,
@@ -69,8 +64,8 @@ def get_strava_stats():
             line = f"- {date}: {name} ({dist}km)"
             summary.append(line)
             
-        # --- DEBUG PRINT: Look at your Terminal to see this list! ---
-        print("\n🔎 STRAVA DATA FOUND:")
+       
+        print("\n STRAVA DATA FOUND:")
         print("\n".join(summary))
         print("-----------------------------\n")
 
@@ -81,7 +76,7 @@ def get_strava_stats():
         
     return "No runs found (API Error)."
 
-# --- THE BRAIN (OpenAI) ---
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 tools_list = [
@@ -114,11 +109,10 @@ class ChatRequest(BaseModel):
 async def chat_endpoint(req: ChatRequest):
     print(f"User: {req.message}")
     
-    # --- NEW: Get Today's Date ---
+    
     today_str = datetime.now().strftime("%A, %B %d, %Y") # e.g., "Wednesday, December 17, 2025"
 
-    # Step 1: Talk to AI (With Date Context)
-    messages = [
+        messages = [
         {
             "role": "system", 
             "content": f"You are a helpful Marathon Coach. Today is {today_str}. Compare the dates in the Strava data to today's date to correctly identify 'last Monday', 'yesterday', etc."
@@ -140,7 +134,7 @@ async def chat_endpoint(req: ChatRequest):
         messages.append(msg)
         
         for tool in msg.tool_calls:
-            print(f"🤖 Tool Triggered: {tool.function.name}")
+            print(f" Tool Triggered: {tool.function.name}")
             result = "Error"
             
             if tool.function.name == "get_weather":
