@@ -16,8 +16,7 @@ Unlike generic chatbots, this agent has **"Tools"**:
 
 ## 📸 Demo
 ### The AI Analyzing My Data
-*(Upload your screenshot of the Swagger UI response here)*
-> The AI correctly identified my last run was 5km on Monday and suggested a tempo run based on my fatigue levels.
+<img width="1942" height="616" alt="image" src="https://github.com/user-attachments/assets/981594b4-7e45-47d3-b1b8-63d2340643b9" />
 
 ## ⚙️ Setup
 1. Clone the repo
